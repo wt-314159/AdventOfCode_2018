@@ -6,7 +6,8 @@
   ],
   "settings": {
     "rust-analyzer.linkedProjects": [
-      "day1/Cargo.toml"
+      "day1/Cargo.toml",
+      "day2/Cargo.toml"
     ]
   }
 }
