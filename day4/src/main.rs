@@ -12,7 +12,7 @@ fn main() {
     // println!("{:?}", input);
     println!("Input length: {}", input.len());
 
-    part_two(&input);
+    part_two(input);
 }
 
 #[allow(dead_code)]
@@ -37,9 +37,11 @@ fn part_two(input: &str) {
         .map(|(id, g)| (id, g.time_most_asleep()))
         .max_by(|(_, (_, n1)), (_, (_, n2))| n1.cmp(n2))
         .unwrap();
-    println!("Guard id: {id} was asleep most often at same time ({num_times} times), at minute {min}. 
-        Multiplied: {id} * {min} = {}", 
-        id * min);
+    println!(
+        "Guard id: {id} was asleep most often at same time ({num_times} times), at minute {min}.
+        Multiplied: {id} * {min} = {}",
+        id * min
+    );
 }
 
 fn get_guards(entries: Vec<Entry>) -> HashMap<usize, Guard> {
@@ -114,8 +116,12 @@ impl Guard {
                 EntryType::FallsAsleep => prev_time = Some(entry.datetime.minute as usize),
                 EntryType::WakesUp => {
                     if let Some(prev_time) = prev_time {
-                        for min in prev_time..entry.datetime.minute as usize {
-                            times[min] += 1;
+                        for time in times
+                            .iter_mut()
+                            .take(entry.datetime.minute as usize)
+                            .skip(prev_time)
+                        {
+                            *time += 1;
                         }
                     } else {
                         panic!("Woke up but never fell asleep in first place")
@@ -149,11 +155,7 @@ impl FromStr for EntryType {
             "falls asleep" => Ok(EntryType::FallsAsleep),
             "wakes up" => Ok(EntryType::WakesUp),
             other => {
-                let id = other
-                    .split_whitespace()
-                    .skip(1)
-                    .next()
-                    .expect("Missing guard id");
+                let id = other.split_whitespace().nth(1).expect("Missing guard id");
                 let id = id[1..].parse::<usize>()?;
                 Ok(EntryType::BeginsShift(id))
             }
@@ -161,10 +163,16 @@ impl FromStr for EntryType {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 struct Entry {
     datetime: DateTime,
     entry_type: EntryType,
+}
+
+impl PartialOrd for Entry {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.datetime.cmp(&other.datetime))
+    }
 }
 
 impl Ord for Entry {
