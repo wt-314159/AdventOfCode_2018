@@ -1,5 +1,5 @@
 #[allow(unused_imports)]
-use std::{fs, collections::HashMap, cmp::min, cmp::max};
+use std::{cmp::max, cmp::min, collections::HashMap, fs};
 // use fancy_regex::Regex;
 // use regex::Regex;
 // use md5::{Digest, Md5};
@@ -10,9 +10,8 @@ fn main() {
     // let input = include_str!("../inputs/test_puzzle_input.txt");
     println!("{:?}", input);
     println!("Input length: {}", input.len());
-    println!("Hello world!");
-    println!("Trying to change exe to see if windows will let it run");
-    part_one(&input); 
+
+    part_two(input);
 }
 
 #[allow(dead_code)]
@@ -23,14 +22,25 @@ fn part_one(input: &str) {
 
 #[allow(dead_code)]
 fn part_two(input: &str) {
-    
+    let mut min_length = input.len();
+    for c in 'a'..='z' {
+        let mut removed = input.to_string().replace(c, "");
+        removed = removed.replace(c.to_ascii_uppercase(), "");
+        let result = do_all_reactions(removed);
+        if result.len() < min_length {
+            min_length = result.len();
+        }
+    }
+    println!("Shortest possible polymer is: {min_length}");
 }
 
 fn do_all_reactions(mut polymer: String) -> String {
     loop {
-        if !react_polymer(&mut polymer) { break; }
+        if !react_polymer(&mut polymer) {
+            break;
+        }
         // eprintln!("{polymer}");
-    };
+    }
     polymer
 }
 
@@ -51,5 +61,5 @@ fn react_polymer(polymer: &mut String) -> bool {
     for i in to_remove.iter().rev() {
         polymer.remove(*i);
     }
-    to_remove.len() != 0
+    !to_remove.is_empty()
 }
