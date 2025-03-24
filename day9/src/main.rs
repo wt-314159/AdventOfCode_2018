@@ -114,14 +114,3 @@ fn seven_or_wrapped(vec_len: usize) -> usize {
         wrapped
     }
 }
-
-fn wrap_index(mut idx: i32, vec_len: usize) -> usize {
-    let vec_len_i32 = vec_len as i32;
-    while idx > vec_len_i32 {
-        idx -= vec_len_i32;
-    }
-    while idx < 0 {
-        idx += vec_len_i32;
-    }
-    idx as usize
-}
