@@ -11,7 +11,7 @@ fn main() {
     // println!("{:?}", input);
     println!("Input length: {}", input.len());
 
-    part_two(&input);
+    part_two(input);
 }
 
 #[allow(dead_code)]
@@ -56,7 +56,7 @@ fn count_twos_and_threes(input: &str) -> (usize, usize) {
 fn find_almost_matching_ids(input: &str) -> Option<(&str, &str)> {
     for (i, line) in input.lines().enumerate() {
         for pos_match in input.lines().take(i) {
-            let mut diffs = line
+            let diffs = line
                 .chars()
                 .enumerate()
                 .filter(|(i, c)| pos_match.chars().nth(*i).unwrap() != *c)

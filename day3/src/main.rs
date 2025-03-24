@@ -1,6 +1,6 @@
 #[allow(unused_imports)]
 use std::{cmp::max, cmp::min, collections::HashMap, fs};
-use std::{num::ParseIntError, ops::Index, str::FromStr};
+use std::{num::ParseIntError, str::FromStr};
 // use fancy_regex::Regex;
 // use regex::Regex;
 // use md5::{Digest, Md5};
@@ -12,7 +12,7 @@ fn main() {
     // println!("{:?}", input);
     println!("Input length: {}", input.len());
 
-    part_two(&input);
+    part_two(input);
 }
 
 #[allow(dead_code)]
@@ -75,9 +75,7 @@ impl FromStr for Claim {
 
 impl Claim {
     fn cells(&self) -> impl Iterator<Item = (usize, usize)> + use<'_> {
-        (self.top..=self.bottom)
-            .map(|r| (self.left..=self.right).map(move |c| (r, c)))
-            .flatten()
+        (self.top..=self.bottom).flat_map(|r| (self.left..=self.right).map(move |c| (r, c)))
     }
 }
 
@@ -105,6 +103,7 @@ impl Grid {
         grid
     }
 
+    #[allow(dead_code)]
     fn rows(&self) -> impl Iterator<Item = &[u8]> {
         self.grid.chunks_exact(self.stride)
     }
@@ -125,10 +124,7 @@ fn find_overlap_size(claims: &Vec<Claim>) -> usize {
 
 fn find_non_overlapping_claim(claims: &Vec<Claim>) -> Option<&Claim> {
     let mut grid = Grid::from_claims(claims);
-    for claim in claims {
-        if claim.cells().all(|(r, c)| *(grid.cell(r, c)) < 2) {
-            return Some(claim);
-        }
-    }
-    None
+    claims
+        .iter()
+        .find(|&claim| claim.cells().all(|(r, c)| *(grid.cell(r, c)) < 2))
 }

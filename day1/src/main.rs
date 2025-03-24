@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 #[allow(unused_imports)]
-use std::{fs, collections::HashMap, cmp::min, cmp::max};
+use std::{cmp::max, cmp::min, collections::HashMap, fs};
 // use fancy_regex::Regex;
 // use regex::Regex;
 // use md5::{Digest, Md5};
@@ -12,7 +12,7 @@ fn main() {
     // println!("{:?}", input);
     println!("Input length: {}", input.len());
 
-    part_two(&input); 
+    part_two(input);
 }
 
 #[allow(dead_code)]
@@ -28,7 +28,7 @@ fn part_one(input: &str) {
 fn part_two(input: &str) {
     let mut freq = 0;
     let mut set = HashSet::new();
-    let mut shifts = parse_input(input).collect::<Vec<_>>();
+    let shifts = parse_input(input).collect::<Vec<_>>();
     let mut found = None;
 
     while found.is_none() {
